@@ -19,6 +19,7 @@ public class SC_FPSController : MonoBehaviour
             return _instance;
         }
     }
+
     private void Awake()
     {
         _instance = this;
@@ -35,7 +36,16 @@ public class SC_FPSController : MonoBehaviour
     {
         return _pages;
     }
+    
+    public float getStamina()
+    {
+        return stamina;
+    }
 
+    public bool getCanRun()
+    {
+        return canRun;
+    }
     // controls
     public float walkingSpeed = 7.5f;
     public float runningSpeed = 11.5f;
@@ -44,6 +54,8 @@ public class SC_FPSController : MonoBehaviour
     public Camera playerCamera;
     public float lookSpeed = 2.0f;
     public float lookXLimit = 45.0f;
+    private float stamina = 100.0f;
+    private bool canRun = true;
 
     CharacterController characterController;
     public Light flashlight;
@@ -72,7 +84,23 @@ public class SC_FPSController : MonoBehaviour
         Vector3 forward = transform.TransformDirection(Vector3.forward);
         Vector3 right = transform.TransformDirection(Vector3.right);
         // Press Left Shift to run
-        bool isRunning = Input.GetKey(KeyCode.LeftShift);
+        bool isRunning = Input.GetKey(KeyCode.LeftShift) && canRun;
+        if (isRunning)
+        {
+            stamina -= 20.0f * Time.deltaTime;
+            if (stamina <= 0)
+            {
+                canRun = false;
+            }
+        }
+        else if (stamina < 100.0f)
+        {
+            stamina += (10.0f - (!canRun ? 5.0f : 0.0f)) * Time.deltaTime;
+        }
+        else
+        {
+            canRun = true;
+        }
         float curSpeedX = canMove ? (isRunning ? runningSpeed : walkingSpeed) * Input.GetAxis("Vertical") : 0;
         float curSpeedY = canMove ? (isRunning ? runningSpeed : walkingSpeed) * Input.GetAxis("Horizontal") : 0;
         float movementDirectionY = moveDirection.y;

@@ -32,8 +32,11 @@ public class UIManager : MonoBehaviour
     public GameObject exit;
     public SC_FPSController player;
     public Slider signalSlider;
+    public Slider staminaSlider;
+    public Image staminaColor;
     public float minBar = 5f;
     public float maxBar = 500f;
+    private SC_FPSController player_class;
     public int totalPages = 10;
 
     public void UpdateObjectiveText()
@@ -64,6 +67,7 @@ public class UIManager : MonoBehaviour
         DisablePressE();
         NoExitText.enabled = false;
         maxBar = 500f;
+        player_class = GameObject.Find("FPSPlayer").GetComponent<SC_FPSController>();
     }
 
     // Update is called once per frame
@@ -73,6 +77,8 @@ public class UIManager : MonoBehaviour
             updateBarFill(closestDist(closestPage()));      
         else
             updateBarFill(Vector3.Distance(player.transform.position, exit.transform.position));
+        updateStaminaBar();
+        updateColor();
     }
 
     public Page closestPage() {
@@ -97,5 +103,24 @@ public class UIManager : MonoBehaviour
 
     private void updateBarFill(float distance) {
         signalSlider.value = maxBar - distance;
+    }
+
+    private void updateStaminaBar()
+    {
+        float stamina = player_class.getStamina();
+        staminaSlider.value = stamina < 0.0f ? 0.0f : stamina;
+        Debug.Log(stamina);
+    }
+    private void updateColor()
+    {
+        bool canRun = player_class.getCanRun();
+        if (canRun)
+        {
+            staminaColor.color = Color.yellow;
+        }
+        else
+        {
+            staminaColor.color = Color.red;
+        }
     }
 }
