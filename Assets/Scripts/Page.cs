@@ -25,24 +25,15 @@ public class Page : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.tag == "Player" && (Input.GetKeyDown(KeyCode.E) || Input.GetKey(KeyCode.E)))
+        if (other.tag == "Player")
         {
             Debug.Log("page got");
             SC_FPSController.Instance.AddPage();
             ui.pages.Remove(this);
             Destroy(this.gameObject);
-            UIManager.Instance.DisablePressE();
-        }
-        else if (other.tag == "Player")
-        {
-            UIManager.Instance.EnablePressE();
         }
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Player")
-        {
-            UIManager.Instance.DisablePressE();
-        }
     }
 }

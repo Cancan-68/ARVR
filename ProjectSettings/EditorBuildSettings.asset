@@ -14,4 +14,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ForestScene.unity
     guid: ea6764080b170ae4985e7015fb6f0680
-  m_configObjects: {}
+  m_configObjects:
+    Unity.XR.Oculus.Settings: {fileID: 11400000, guid: b84a10f8ea3aef9e882adf0cf2404945, type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 7a5e33508870c25f8bfd85de5f31e983, type: 2}
+    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 5ecff44cdf6e67291812e8a9183df132, type: 2}
+  m_UseUCBPForAssetBundles: 0
