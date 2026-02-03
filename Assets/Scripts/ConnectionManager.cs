@@ -5,20 +5,16 @@ using UnityEngine;
 
 public class ConnectionManager : MonoBehaviour
 {
-    [SerializeField] private TMP_InputField inputField;
-
     public void CreateRoom()
     {
-        Debug.Log(inputField);
         Debug.Log(NetworkManager.Instance);
-        NetworkManager.Instance.CreateSession(inputField.text);
+        NetworkManager.Instance.CreateSession("testRoom");
     }
 
     public void JoinRoom()
     {
-        Debug.Log(inputField);
         Debug.Log(NetworkManager.Instance);
-        NetworkManager.Instance.JoinSession(inputField.text);
+        NetworkManager.Instance.JoinSession("testRoom");
 
     }
 }
