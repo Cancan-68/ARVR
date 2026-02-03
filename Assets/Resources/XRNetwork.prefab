@@ -58,7 +58,7 @@ MonoBehaviour:
   m_OriginBaseGameObject: {fileID: 775344306142323226}
   m_CameraFloorOffsetObject: {fileID: 2827922278228944600}
   m_RequestedTrackingOriginMode: 0
-  m_CameraYOffset: 1.1176
+  m_CameraYOffset: 1.64
 --- !u!114 &7421987796259453464
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -662,7 +662,7 @@ GameObject:
   - component: {fileID: 3075525458817633447}
   - component: {fileID: 4220329948459569313}
   m_Layer: 0
-  m_Name: Main Camera
+  m_Name: Main Camera Player
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

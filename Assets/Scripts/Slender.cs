@@ -48,7 +48,7 @@ public class Movement : MonoBehaviour
 
     void Start()
     {
-        player = GameObject.Find("XRNetwork(Clone)").GetComponent<Transform>();
+        player = GameObject.Find("Main Camera Player").GetComponent<Transform>();
         path = new NavMeshPath();
         player_class = GameObject.Find("XRNetwork(Clone)").GetComponent<SC_FPSController>();
     }
