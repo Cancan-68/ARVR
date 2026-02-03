@@ -39,10 +39,7 @@ public class VRPlayerManager : MonoBehaviour
     public void AddPage()
     {
         _pages++;
-        if (UIManager.Instance != null)
-        {
-            UIManager.Instance.UpdateObjectiveText();
-        }
+
     }
 
     public int getPageNumber()

@@ -99,7 +99,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         Debug.Log($"Joueurs : {PhotonNetwork.CurrentRoom.PlayerCount}");
 
         // Ici tu peux charger la scène de jeu
-        // PhotonNetwork.LoadLevel("GameScene");
+        PhotonNetwork.LoadLevel("ForestSceneVR");
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)

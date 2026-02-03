@@ -5,11 +5,12 @@ using UnityEngine;
 public class Page : MonoBehaviour
 {
     public UIManager ui;
+    private SC_FPSController player_class;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        player_class = GameObject.Find("XRNetwork(Clone)").GetComponent<SC_FPSController>();
     }
 
     // Update is called once per frame
@@ -25,19 +26,10 @@ public class Page : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.tag == "Player" && (Input.GetKeyDown(KeyCode.E) || Input.GetKey(KeyCode.E)))
         {
             Debug.Log("page got");
-            if (VRPlayerManager.Instance != null)
-            {
-                VRPlayerManager.Instance.AddPage();
-            }
-            else
-            {
-                // Fallback for non-VR testing or if manager is missing
-                Debug.LogError("VRPlayerManager instance not found!");
-            }
-            // SC_FPSController.Instance.AddPage();
+            player_class.AddPage();
             ui.pages.Remove(this);
             Destroy(this.gameObject);
         }

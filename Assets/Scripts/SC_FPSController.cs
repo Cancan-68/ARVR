@@ -1,43 +1,42 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using System.Collections;
 
 [RequireComponent(typeof(CharacterController))]
-
 public class SC_FPSController : MonoBehaviour
 {
-    // singleton code
-    private static SC_FPSController _instance;
-    public static SC_FPSController Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                Debug.Log("Player is null");
-            }
-            return _instance;
-        }
-    }
+    public int _pages = 0;
 
-    private void Awake()
-    {
-        _instance = this;
-    }
+    public float walkingSpeed = 7.5f;
+    public float runningSpeed = 11.5f;
+    public float gravity = 20.0f;
+    public UIManager ui;
 
-    // global variable
-    [SerializeField] public int _pages;
+    public Camera playerCamera;
+    public float lookSpeed = 2.0f;
+    public float lookXLimit = 45.0f;
+
+    private float stamina = 100.0f;
+    private bool canRun = true;
+
+    CharacterController characterController;
+    public Light flashlight;
+
+    Vector3 moveDirection = Vector3.zero;
+    float rotationX = 0;
+
+    [HideInInspector]
+    public bool canMove = true;
+
     public void AddPage()
     {
         _pages++;
     }
 
-    public int getPageNumber()
+    public int getPages()
     {
         return _pages;
     }
-    
+
     public float getStamina()
     {
         return stamina;
@@ -47,52 +46,24 @@ public class SC_FPSController : MonoBehaviour
     {
         return canRun;
     }
-    // controls
-    public float walkingSpeed = 7.5f;
-    public float runningSpeed = 11.5f;
-    public float jumpSpeed = 8.0f;
-    public float gravity = 20.0f;
-    public Camera playerCamera;
-    public float lookSpeed = 2.0f;
-    public float lookXLimit = 45.0f;
-    private float stamina = 100.0f;
-    private bool canRun = true;
-
-    CharacterController characterController;
-    public Light flashlight;
-    Vector3 moveDirection = Vector3.zero;
-    float rotationX = 0;
-
-    [HideInInspector]
-    public bool canMove = true;
 
     void Start()
     {
-        _pages = 0;
-
         characterController = GetComponent<CharacterController>();
 
-        // Lock cursor
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
     void Update()
     {
-        UIManager.Instance.UpdateObjectiveText();
-
-        // We are grounded, so recalculate move direction based on axes
         Vector3 forward = transform.TransformDirection(Vector3.forward);
         Vector3 right = transform.TransformDirection(Vector3.right);
-        // Press Left Shift to run
-        bool isRunning = (Keyboard.current != null && Keyboard.current.leftShiftKey.isPressed) && canRun;
+        bool isRunning = true;
         if (isRunning)
         {
             stamina -= 20.0f * Time.deltaTime;
-            if (stamina <= 0)
-            {
-                canRun = false;
-            }
+            if (stamina <= 0) canRun = false;
         }
         else if (stamina < 100.0f)
         {
@@ -102,54 +73,26 @@ public class SC_FPSController : MonoBehaviour
         {
             canRun = true;
         }
-        float inputV = 0;
-        float inputH = 0;
-        if (Keyboard.current != null)
-        {
-            if (Keyboard.current.wKey.isPressed || Keyboard.current.upArrowKey.isPressed) inputV += 1;
-            if (Keyboard.current.sKey.isPressed || Keyboard.current.downArrowKey.isPressed) inputV -= 1;
-            if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed) inputH += 1;
-            if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed) inputH -= 1;
-        }
-        float curSpeedX = canMove ? (isRunning ? runningSpeed : walkingSpeed) * inputV : 0;
-        float curSpeedY = canMove ? (isRunning ? runningSpeed : walkingSpeed) * inputH : 0;
+
+        float curSpeedX = canMove ? (isRunning ? runningSpeed : walkingSpeed) * Input.GetAxis("Vertical") : 0;
+        float curSpeedY = canMove ? (isRunning ? runningSpeed : walkingSpeed) * Input.GetAxis("Horizontal") : 0;
         float movementDirectionY = moveDirection.y;
         moveDirection = (forward * curSpeedX) + (right * curSpeedY);
         moveDirection.y = movementDirectionY;
 
-        // Apply gravity. Gravity is multiplied by deltaTime twice (once here, and once below
-        // when the moveDirection is multiplied by deltaTime). This is because gravity should be applied
-        // as an acceleration (ms^-2)
-        if (!characterController.isGrounded)
-        {
-            moveDirection.y -= gravity * Time.deltaTime;
-        }
-
-        // Move the controller
         characterController.Move(moveDirection * Time.deltaTime);
 
-        // Player and Camera rotation
-        if (canMove)
+        if (canMove && playerCamera != null)
         {
-            float mouseY = Mouse.current != null ? Mouse.current.delta.y.ReadValue() : 0;
-            rotationX += -mouseY * lookSpeed;
+            rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
             rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
             playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
-            flashlight.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
-            float mouseX = Mouse.current != null ? Mouse.current.delta.x.ReadValue() : 0;
-            transform.rotation *= Quaternion.Euler(0, mouseX * lookSpeed, 0);
+
+            if (flashlight != null)
+                flashlight.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
+
+            transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
         }
 
-        // Left Click interaction
-        if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            Ray ray = new Ray(transform.position, Camera.main.transform.forward);
-            Debug.DrawRay(ray.origin, ray.direction * 10, Color.red, 2.0f);
-            
-            if (Physics.Raycast(ray, out RaycastHit hit))
-            {
-                Debug.Log(hit.transform.name);
-            }
-        }
     }
 }

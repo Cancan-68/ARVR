@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class Exit : MonoBehaviour
 {
+    public UIManager ui;
     public global global;
 
     // Start is called before the first frame update
@@ -20,17 +21,17 @@ public class Exit : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (SC_FPSController.Instance._pages == 10)
+        if (GameObject.Find("FPSPlayer").GetComponent<SC_FPSController>()._pages == 10)
         {
             SceneManager.LoadScene(0);
         }
         else
         {
-            UIManager.Instance.NoExitText.enabled = true;
+            ui.NoExitText.enabled = true;
         }
     }
     private void OnTriggerExit(Collider other)
     {
-        UIManager.Instance.NoExitText.enabled = false;
+        ui.NoExitText.enabled = false;
     }
 }

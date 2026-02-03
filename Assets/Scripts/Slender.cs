@@ -21,7 +21,7 @@ public class Movement : MonoBehaviour
     private float slenderRadius = 0.6f;
     private float nextMovement = 5.0f;
     private float movementPeriod = 15.0f;
-    // private SC_FPSController player_class;
+    private SC_FPSController player_class;
     public int speed = 5;
     float timeDeath = 0.0f;
     float maxTimeDeath = 13.0f;
@@ -48,17 +48,9 @@ public class Movement : MonoBehaviour
 
     void Start()
     {
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj != null)
-        {
-            player = playerObj.transform;
-        }
-        else
-        {
-            Debug.LogError("Slender: Player not found! Tag your XR Origin as 'Player'");
-        }
+        player = GameObject.Find("XRNetwork(Clone)").GetComponent<Transform>();
         path = new NavMeshPath();
-        // player_class = GameObject.Find("FPSPlayer").GetComponent<SC_FPSController>();
+        player_class = GameObject.Find("XRNetwork(Clone)").GetComponent<SC_FPSController>();
     }
 
     public float GetDistanceToPlayer()
@@ -73,11 +65,9 @@ public class Movement : MonoBehaviour
         switch(slender_state)
         {
             case State.IDLE:
-                // Debug.Log("Slender: IDLE - Teleporting...");
                 Teleport();
                 break;
             case State.STALKING:
-                // Debug.Log("Slender: STALKING");
                 if (Time.time > nextMovement && !IsInFront(transform.position))
                 {
                     nextMovement = Time.time + movementPeriod;
@@ -85,7 +75,6 @@ public class Movement : MonoBehaviour
                 }
                 break;
             case State.AGGRESSIVE:
-                 Debug.Log("Slender: AGGRESSIVE");
                 break;
             default:
                 break;
@@ -115,9 +104,7 @@ public class Movement : MonoBehaviour
     }
     private void Teleport()
     {
-        int pages = VRPlayerManager.Instance != null ? VRPlayerManager.Instance.getPageNumber() : 0;
-        // int pages = 0;
-        float distance = Lerp(100.0f, 20.0f, (float)pages / 8);
+        float distance = Lerp(100.0f, 20.0f, (float)player_class.getPages() / 10);
         Vector3 newPos = GetTeleportPosition(player.position, distance);
         while (IsInFront(newPos))
         {
