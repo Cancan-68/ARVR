@@ -28,7 +28,16 @@ public class Page : MonoBehaviour
         if (other.tag == "Player")
         {
             Debug.Log("page got");
-            SC_FPSController.Instance.AddPage();
+            if (VRPlayerManager.Instance != null)
+            {
+                VRPlayerManager.Instance.AddPage();
+            }
+            else
+            {
+                // Fallback for non-VR testing or if manager is missing
+                Debug.LogError("VRPlayerManager instance not found!");
+            }
+            // SC_FPSController.Instance.AddPage();
             ui.pages.Remove(this);
             Destroy(this.gameObject);
         }

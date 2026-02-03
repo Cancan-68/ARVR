@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
 
@@ -84,7 +85,7 @@ public class SC_FPSController : MonoBehaviour
         Vector3 forward = transform.TransformDirection(Vector3.forward);
         Vector3 right = transform.TransformDirection(Vector3.right);
         // Press Left Shift to run
-        bool isRunning = Input.GetKey(KeyCode.LeftShift) && canRun;
+        bool isRunning = (Keyboard.current != null && Keyboard.current.leftShiftKey.isPressed) && canRun;
         if (isRunning)
         {
             stamina -= 20.0f * Time.deltaTime;
@@ -101,8 +102,17 @@ public class SC_FPSController : MonoBehaviour
         {
             canRun = true;
         }
-        float curSpeedX = canMove ? (isRunning ? runningSpeed : walkingSpeed) * Input.GetAxis("Vertical") : 0;
-        float curSpeedY = canMove ? (isRunning ? runningSpeed : walkingSpeed) * Input.GetAxis("Horizontal") : 0;
+        float inputV = 0;
+        float inputH = 0;
+        if (Keyboard.current != null)
+        {
+            if (Keyboard.current.wKey.isPressed || Keyboard.current.upArrowKey.isPressed) inputV += 1;
+            if (Keyboard.current.sKey.isPressed || Keyboard.current.downArrowKey.isPressed) inputV -= 1;
+            if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed) inputH += 1;
+            if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed) inputH -= 1;
+        }
+        float curSpeedX = canMove ? (isRunning ? runningSpeed : walkingSpeed) * inputV : 0;
+        float curSpeedY = canMove ? (isRunning ? runningSpeed : walkingSpeed) * inputH : 0;
         float movementDirectionY = moveDirection.y;
         moveDirection = (forward * curSpeedX) + (right * curSpeedY);
         moveDirection.y = movementDirectionY;
@@ -121,15 +131,17 @@ public class SC_FPSController : MonoBehaviour
         // Player and Camera rotation
         if (canMove)
         {
-            rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
+            float mouseY = Mouse.current != null ? Mouse.current.delta.y.ReadValue() : 0;
+            rotationX += -mouseY * lookSpeed;
             rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
             playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
             flashlight.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
-            transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
+            float mouseX = Mouse.current != null ? Mouse.current.delta.x.ReadValue() : 0;
+            transform.rotation *= Quaternion.Euler(0, mouseX * lookSpeed, 0);
         }
 
         // Left Click interaction
-        if (Input.GetMouseButtonDown(0))
+        if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
         {
             Ray ray = new Ray(transform.position, Camera.main.transform.forward);
             Debug.DrawRay(ray.origin, ray.direction * 10, Color.red, 2.0f);

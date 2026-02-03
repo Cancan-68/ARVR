@@ -30,18 +30,20 @@ public class UIManager : MonoBehaviour
     [SerializeField] public TextMeshProUGUI NoExitText;
     public List<Page> pages;
     public GameObject exit;
-    public SC_FPSController player;
+
+    public Transform player;
     public Slider signalSlider;
     public Slider staminaSlider;
     public Image staminaColor;
     public float minBar = 5f;
     public float maxBar = 500f;
-    private SC_FPSController player_class;
+    // private SC_FPSController player_class;
     public int totalPages = 10;
 
     public void UpdateObjectiveText()
     {
-        int pages = SC_FPSController.Instance._pages;
+        int pages = VRPlayerManager.Instance != null ? VRPlayerManager.Instance._pages : 0;
+        // int pages = 0;
         if (pages >= totalPages)
         {
             ObjectiveText.text = "Objective:\nGet to the exit...";
@@ -67,16 +69,31 @@ public class UIManager : MonoBehaviour
         DisablePressE();
         NoExitText.enabled = false;
         maxBar = 500f;
-        player_class = GameObject.Find("FPSPlayer").GetComponent<SC_FPSController>();
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null)
+        {
+            player = playerObj.transform;
+        }
+        else
+        {
+            Debug.LogError("Player not found! Make sure to tag your XR Origin/Camera as 'Player'");
+        }
+        // player_class = GameObject.Find("FPSPlayer").GetComponent<SC_FPSController>();
     }
 
     // Update is called once per frame
     void Update()
     {
         if (pages.Count > 0)
-            updateBarFill(closestDist(closestPage()));      
+        {
+            if (player != null)
+                updateBarFill(closestDist(closestPage()));
+        }
         else
-            updateBarFill(Vector3.Distance(player.transform.position, exit.transform.position));
+        {
+            if (player != null && exit != null)
+                updateBarFill(Vector3.Distance(player.position, exit.transform.position));
+        }
         updateStaminaBar();
         updateColor();
     }
@@ -84,7 +101,8 @@ public class UIManager : MonoBehaviour
     public Page closestPage() {
         Page closest = pages[0];
         float minDist = Mathf.Infinity;
-        Vector3 playerPosition = player.transform.position;
+        if (player == null) return closest;
+        Vector3 playerPosition = player.position;
 
         foreach(Page page in pages) {
             float distanceToPlayer = Vector3.Distance(page.transform.position, playerPosition);
@@ -96,8 +114,9 @@ public class UIManager : MonoBehaviour
         return closest;
     }
 
-    public float closestDist(Page page) { 
-        float distanceToTarget = Vector3.Distance(player.transform.position, page.transform.position);
+    public float closestDist(Page page) {
+        if (player == null) return Mathf.Infinity;
+        float distanceToTarget = Vector3.Distance(player.position, page.transform.position);
         return distanceToTarget;
     }
 
@@ -107,13 +126,17 @@ public class UIManager : MonoBehaviour
 
     private void updateStaminaBar()
     {
-        float stamina = player_class.getStamina();
+        if (VRPlayerManager.Instance == null) return;
+
+        float stamina = VRPlayerManager.Instance.getStamina();
         staminaSlider.value = stamina < 0.0f ? 0.0f : stamina;
-        Debug.Log(stamina);
+        // Debug.Log(stamina);
     }
     private void updateColor()
     {
-        bool canRun = player_class.getCanRun();
+        if (VRPlayerManager.Instance == null) return;
+
+        bool canRun = VRPlayerManager.Instance.getCanRun();
         if (canRun)
         {
             staminaColor.color = Color.yellow;

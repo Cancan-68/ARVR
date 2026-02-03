@@ -6,14 +6,17 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/TitleScreen.unity
-    guid: 2941642f77c0dfd42af237396cecf41e
-  - enabled: 1
-    path: Assets/Scenes/MainScene.unity
-    guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 1
+    path: Assets/Scenes/ForestSceneVR.unity
+    guid: 16df70fb470a8d92b9960756dcef9415
+  - enabled: 0
     path: Assets/Scenes/ForestScene.unity
     guid: ea6764080b170ae4985e7015fb6f0680
+  - enabled: 0
+    path: Assets/Scenes/TitleScreen.unity
+    guid: 2941642f77c0dfd42af237396cecf41e
+  - enabled: 0
+    path: Assets/Scenes/MainScene.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: b84a10f8ea3aef9e882adf0cf2404945, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 7a5e33508870c25f8bfd85de5f31e983, type: 2}
