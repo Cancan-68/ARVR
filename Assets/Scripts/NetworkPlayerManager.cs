@@ -29,7 +29,6 @@ public class NetworkPlayerManager : MonoBehaviour
             await Task.Yield();
         }
 
-        // On lance les spawns en asynchrone
         await SpawnPlayer();
 
         if (_runner.IsServer || _runner.IsSharedModeMasterClient)

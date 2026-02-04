@@ -20,6 +20,7 @@ GameObject:
   - component: {fileID: -5315481888226260261}
   - component: {fileID: 6185594484560140480}
   - component: {fileID: -6229591751203546091}
+  - component: {fileID: 6312459474340131553}
   m_Layer: 0
   m_Name: XRNetwork
   m_TagString: Player
@@ -296,8 +297,23 @@ MonoBehaviour:
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
-  NetworkedBehaviours: []
+  NetworkedBehaviours:
+  - {fileID: 6312459474340131553}
   ForceRemoteRenderTimeframe: 0
+--- !u!114 &6312459474340131553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 775344306142323226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7d47cc83a11c6346a03d40c13aea043, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkPlayerSetup
+  xrOrigin: {fileID: 775344306142323226}
+  audioListener: {fileID: 0}
 --- !u!1 &1336311624703136407
 GameObject:
   m_ObjectHideFlags: 0
@@ -417,7 +433,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2301891594410703050}
-  - {fileID: 4050462068543676649}
   m_Father: {fileID: 3765884585348977671}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3791734000936211608
@@ -600,7 +615,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5006957286043115872}
+  m_Father: {fileID: 2301891594410703050}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!108 &2621903076404511083
 Light:
@@ -701,6 +716,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5744521384686969298}
+  - {fileID: 4050462068543676649}
   m_Father: {fileID: 5006957286043115872}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &2876962037886356365

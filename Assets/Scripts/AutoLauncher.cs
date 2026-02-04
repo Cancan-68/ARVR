@@ -24,7 +24,7 @@ public class AutoLauncher : MonoBehaviour
         // 3. Lancement automatique
         var result = await _runner.StartGame(new StartGameArgs()
         {
-            GameMode = GameMode.AutoHostOrClient, // Crée si n'existe pas, rejoint sinon
+            GameMode = GameMode.Shared,
             SessionName = _roomName,
             Scene = SceneRef.FromIndex(_gameSceneIndex),
             SceneManager = sceneManager
