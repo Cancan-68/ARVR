@@ -11518,9 +11518,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da3c1c09c5950bc4d836c0f20c4f4238, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  playerPrefabName: XRNetwork
-  slendermanPrefabName: SlenderNetwork
-  pagePrefabName: PageNetwork
+  playerPrefab: {fileID: -6229591751203546091, guid: 762dfea56599a7b409af286e27546e00, type: 3}
+  slendermanPrefab: {fileID: 8996717223804895759, guid: 80296a59b962c2b41b4473cffa63efa2, type: 3}
+  pagePrefab: {fileID: 4278482815595628694, guid: e4c4809a47274b4428a7907bb8a86a1f, type: 3}
   playerSpawnPoints:
   - {fileID: 1029790018}
   - {fileID: 961396145}

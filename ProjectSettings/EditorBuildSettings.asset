@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/RoomScene.unity
+    guid: 3bdc06b828ede704ebf8c86cd7149b58
+  - enabled: 1
     path: Assets/Scenes/ForestSceneVR.unity
     guid: 16df70fb470a8d92b9960756dcef9415
   - enabled: 0

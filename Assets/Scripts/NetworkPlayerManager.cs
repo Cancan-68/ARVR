@@ -1,52 +1,65 @@
 using UnityEngine;
-using Photon.Pun;
-using System.IO;
+using Fusion;
+using System.Collections;
+using System.Threading.Tasks; // Important pour Task
 
-public class NetworkPlayerManager : MonoBehaviourPunCallbacks
+public class NetworkPlayerManager : MonoBehaviour
 {
-    [Header("Spawn Settings")]
-    public string playerPrefabName = "XRNetwork"; // Must be in Resources folder
-    public string slendermanPrefabName = "SlenderNetwork";
-    public string pagePrefabName = "PageNetwork";
+    [Header("Prefabs")]
+    public NetworkObject playerPrefab;
+    public NetworkObject slendermanPrefab;
+    public NetworkObject pagePrefab;
 
     [Header("Spawn Points")]
     public Transform[] playerSpawnPoints;
     public Transform slendermanSpawnPoint;
     public Transform[] pageSpawnPoints;
 
-    void Start()
-    {
-        if (PhotonNetwork.IsConnected)
-        {
-            SpawnPlayer();
+    private NetworkRunner _runner;
 
-            // Only the Master Client (Host) should spawn the monster and items
-            if (PhotonNetwork.IsMasterClient)
-            {
-                SpawnGameElements();
-            }
+    async void Start()
+    {
+        _runner = FindFirstObjectByType<NetworkRunner>();
+
+        if (_runner == null) return;
+
+        // Attendre que le Runner soit prêt
+        while (!_runner.IsCloudReady)
+        {
+            await Task.Yield();
+        }
+
+        // On lance les spawns en asynchrone
+        await SpawnPlayer();
+
+        if (_runner.IsServer || _runner.IsSharedModeMasterClient)
+        {
+            await SpawnGameElements();
         }
     }
 
-    void SpawnPlayer()
+    async Task SpawnPlayer()
     {
         int randomPoint = Random.Range(0, playerSpawnPoints.Length);
         Transform spawn = playerSpawnPoints[randomPoint];
 
-        // Instantiate the VR player across the network
-        PhotonNetwork.Instantiate(playerPrefabName, spawn.position, spawn.rotation);
+        // FIX: Utilisation de SpawnAsync au lieu de Spawn
+        await _runner.SpawnAsync(playerPrefab, spawn.position, spawn.rotation, _runner.LocalPlayer);
+        Debug.Log("Joueur spawn avec succès !");
     }
 
-    void SpawnGameElements()
+    async Task SpawnGameElements()
     {
-        // Spawn Slenderman
-        PhotonNetwork.Instantiate(slendermanPrefabName, slendermanSpawnPoint.position, slendermanSpawnPoint.rotation);
+        // On attend que le monstre soit spawn
+        await _runner.SpawnAsync(slendermanPrefab, slendermanSpawnPoint.position, slendermanSpawnPoint.rotation, null);
 
-        // Spawn 10 Pages at random locations
+        // On spawn les pages
         for (int i = 0; i < 10; i++)
         {
             Transform pageSpawn = pageSpawnPoints[i % pageSpawnPoints.Length];
-            PhotonNetwork.Instantiate(pagePrefabName, pageSpawn.position, pageSpawn.rotation);
+            // Ici on ne met pas forcément de await si on veut qu'elles spawn toutes en même temps
+            _runner.SpawnAsync(pagePrefab, pageSpawn.position, pageSpawn.rotation, null);
         }
+        Debug.Log("Éléments de jeu spawn avec succès !");
     }
 }

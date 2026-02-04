@@ -67,6 +67,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6112141221186652590, guid: 66caf49ca6defad4ca02912a43f0b550, type: 3}
       insertIndex: -1
       addedObject: {fileID: -7344227120115584718}
+    - targetCorrespondingSourceObject: {fileID: 6112141221186652590, guid: 66caf49ca6defad4ca02912a43f0b550, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4278482815595628694}
   m_SourcePrefab: {fileID: 100100000, guid: 66caf49ca6defad4ca02912a43f0b550, type: 3}
 --- !u!1 &7006017252789205670 stripped
 GameObject:
@@ -95,3 +98,21 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &4278482815595628694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7006017252789205670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 3826374383
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours: []
+  ForceRemoteRenderTimeframe: 0
